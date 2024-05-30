@@ -38,7 +38,7 @@ int main()
 
 ### 计算机中的单位
 
-![计算机中的单位](D:\文档\新建文件夹 (2)\C语言程序设计\源码\画图\计算机中的单位.png)
+![计算机中的单位](https://github.com/Webmian/C_Code_Learn/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BD%8D.png)
 
 ### C语言常见数据类型
 
