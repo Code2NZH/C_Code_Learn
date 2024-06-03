@@ -1,3 +1,5 @@
+[TOC]
+
 
 
 # C语言学习笔记
@@ -34,11 +36,11 @@ int main()
 
 
 
-## C语言的数据类型
+## C语言的数据0类型
 
 ### 计算机中的单位
 
-![计算机中的单位](https://github.com/Webmian/C_Code_Learn/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BD%8D.png)
+![计算机中的单位](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BD%8D.png)
 
 ### C语言常见数据类型
 
@@ -192,15 +194,15 @@ double price = 12.3;
 >     > <em>进入作用域生命周期开始,出作用域生命周期结束</em>
 >     >
 >     > > ```c
->     > > #include <stdio.h>	//						|
->     > > int main()					//						|
->     > > {										//						|
->     > > 		{//---------------------------|----生命周期开始
->     > > 				int a = 10;	//						|
->     > > 				printf("%d\n", a);//			|
->     > >     }//------------------------------|----生命周期结束
->     > > 		printf("%d\n",a);//						|
->     > > 		return 0;				//						|
+>     > > #include <stdio.h>
+>     > > int main()
+>     > > {
+>     > > 		{//----------------------------|----生命周期开始
+>     > > 				int a = 10;
+>     > > 				printf("%d\n", a);
+>     > >     }   //-------------------------- --|----生命周期结束
+>     > > 		printf("%d\n",a);
+>     > > 		return 0;
 >     > > }
 >     > > ```
 >
@@ -541,6 +543,7 @@ int main()
 | `%s ` |      打印字符串      |
 | `%f`  | 打印float类型的数据  |
 | `%lf` | 打印double类型的数据 |
+| `%p`  |       打印地址       |
 
 ### 三、注释
 
@@ -560,8 +563,6 @@ int main()
 > > //这是注释
 > > ```
 > >
-> > 
->
 > 
 
 ## 选择语句
@@ -978,8 +979,9 @@ int c = a > b ? a : b;//输出b=20
 >         ```
 >
 >         也因此，局部变量在开始时会创建，结束时会自动销毁
+>
 > 2. <b>*循环语句*<b/>
->     
+>
 >     - `for`
 >     - `while`
 >     - `do while`
@@ -987,6 +989,7 @@ int c = a > b ? a : b;//输出b=20
 >         - 用于跳出循环
 >         - 常与for、while、do while、switch搭配使用
 >     - `continue`
+>
 > 3. <b>*分支语句*</b>
 >
 >     - `if else`
@@ -995,6 +998,7 @@ int c = a > b ? a : b;//输出b=20
 >     - `case`
 >     - `default`
 >     - `go to`
+>
 > 4. <b>*内置类型*</b>
 >
 >     - `char`
@@ -1014,26 +1018,609 @@ int c = a > b ? a : b;//输出b=20
 >     - `unsigned` - 无符号
 >
 >         ... ...
+>
 > 5. <b>*自定义类型*</b>
 >     - `enum` - 枚举
 >     - `struct` - 结构体
 >     - `union` - 联合体（共用体）
+>
 > 6. `const`
+>
 >     - 常属性
 >     - 用于修饰变量，不能被修改
-> 7. `extern`
->     - 用于声明外部符号
-> 8. `register`
+>
+> 7. `register` -  寄存器
+>
 >     - 寄存器关键词
+>
+>         ```c
+>         int main()
+>         {
+>         	register int num = 1;//建议：num = 1存放到寄存器中
+>                                             
+>         	return 0;
+>         }
+>         ```
+>
+>         - 对于需要反复使用的变量放到寄存器中，会提升程序的运行速度
+>
+>             ![电脑储存](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E7%94%B5%E8%84%91%E5%82%A8%E5%AD%98.png)
+>
+> 8. `extern`
+>
+>     - 用于声明外部符号
+>
 > 9. `static`
->     - 静态变量
+>
+>     - 在C语言中，*static*可以用来修饰变量或函数
+>
+>         - 1. 修饰局部变量（<i><big><b>改变存储位置</b></big></i>）
+>
+>                 ```c
+>                 int add()
+>                 {
+>                 	int a = 1;
+>                 	printf("%d ", a);
+>                 	a++;
+>                 }
+>
+>                 int main()
+>                 {
+>                 	int i = 0;
+>                 	while (i < 10)
+>                 	{
+>                 		add();
+>                 		i++;
+>                 	}
+>
+>                 	return 0;
+>                 }
+>                 ```
+>
+>                 以上代码的输出结果为：
+>
+>                 ```c
+>                 1 1 1 1 1 1 1 1 1 1 
+>                 ```
+>
+>                 > - 这是由于局部变量只会在其进入作用域时创建，出作用域时销毁。在主函数每次循环时，函数*add()*始终处于刚刚创建的状态，因此每次打印出的a的值都为1
+>
+>                 使用*static*来修饰a，使其成为静态变量
+>
+>                 ```c
+>                 int add()
+>                 {
+>                 	static int a = 1;//静态变量在出作用域时不销毁,每次循环延续使用上次a的值
+>                 	printf("%d ", a);
+>                 	a++;
+>                 }
+>
+>                 int main()
+>                 {
+>                 	int i = 0;
+>                 	while (i < 10)
+>                 	{
+>                 		add();
+>                 		i++;
+>                 	}
+>
+>                 	return 0;
+>                 }
+>                 ```
+>
+>                 此时，代码的运行结果为：
+>                 ```c
+>                 1 2 3 4 5 6 7 8 9 10
+>                 ```
+>
+>                 > - 通过*static*修饰的局部变量，出了作用域，不会被销毁。
+>                 >
+>                 > - 本质上，*static*修饰局部变量的时候，改变了变量的存储位置（由<b>栈区</b>变为<b>静态区</b>）。同时延长了变量的生命周期，使其变得和程序的生命周期一样长。
+>
+>                 ![C语言内存区域划分](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/C%E8%AF%AD%E8%A8%80%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E5%88%92%E5%88%86.png)
+>
+>             2. 修饰全局变量（<i><big><b>改变全局变量的链接属性</b></big></i>）
+>
+>                 > - 全局变量具有*外部链接属性*，*static*修饰全局变量时，该全局变量的*外部链接属性*就变成了*内部链接属性*。其它源文件就不能再通过*extern*来使用这个全局变量
+>                 >
+>                 > **text.c**
+>                 >
+>                 > ```c
+>                 > #define _CRT_SECURE_NO_WARNINGS
+>                 > 
+>                 > //全局变量--->全局变量具有外部链接属性
+>                 > //int number = 1234;
+>                 > static int number = 1234;
+>                 > //此时的全局变量number只具有内部连接属性
+>                 > ```
+>                 >
+>                 > **main.c**
+>                 >
+>                 > ```c
+>                 > extern int number;
+>                 > int main()
+>                 > {
+>                 > 	printf("%d\n", number);
+>                 > 	return 0;
+>                 > }
+>                 > ```
+>                 >
+>                 > - 此时就无法使用*extern int number;*来声明外部变量*number*
+>
+>             3. 修饰函数（<i><big><b>改变函数的链接属性</b></big></i>）
+>
+>                 > 类似于修饰全局变量，函数同样具有*外部链接属性*，*static*修饰函数时，该函数的*外部链接属性*就变成了*内部链接属性*。其它源文件就不能再通过*extern*来使用这个函数
+>                 >
+>                 > **text.c**
+>                 >
+>                 > ```c
+>                 > //此时在main.c中可以通过extern外部调用Add函数
+>                 > int Add(int x, int y)//具有外部链接属性
+>                 > {
+>                 > 	return x + y;
+>                 > }
+>                 > //*****************************************
+>                 > //用static修饰的函数Add，无法在main.c中使用
+>                 > static int Add(int x, int y)//仅具有内部连接属性
+>                 > {
+>                 > 	return x + y;
+>                 > }
+>                 > ```
+>                 >
+>                 > **main.c**
+>                 >
+>                 > ```c
+>                 > extern int Add(int x, int y);
+>                 > 
+>                 > int main()
+>                 > {
+>                 > 	int a = 10;
+>                 > 	int b = 20;
+>                 > 	int c = Add(a, b);
+>                 > 	printf("%d\n", c);
+>                 > 	return 0;
+>                 > }
+>                 > ```
+>                 >
+>                 > 
+>
 > 10. `return`
->     - 函数返回值
+>    - 函数返回值
+>
 > 11. `sizeof`
 >     - 计算大小
+>
 > 12. `typedef`
->     - 类型重命名
+>
+>     - 类型定于（类型重命名）
+>
+>         - 可以用于简化一些复杂的类型
+>
+>             ```c
+>             typedef unsigned int	uint;
+>             //将unsigned int重定义为uint
+>             typedef unsigned char uchar;
+>             //将unsigned char重定义为uchar
+>             ```
+>
+>             简化结构体的名称：
+>
+>             ```c
+>             typedef struct Node
+>             {
+>             	int data;
+>             	struct Node* next;
+>             }Node;
+>                                                                                                                                     
+>             int main()
+>             {
+>             	struct Node b;
+>             	Node a;
+>                                                                                                                                     
+>             	return 0;
+>             }
+>             ```
+>
+> 
+>
 > 13. `void`
+>
 >     - 无
 >     - 常用于函数的返回类型，函数的参数
+>
 > 14. `volatile`
+>
+> 15. `#define`
+>
+>     - 定义<b>常量</b>和<b>宏</b>
+>
+>         > 1. 定义常量
+>         >
+>         >     ```c
+>         >     #define Sum 100
+>         >     //此时的Sum等效于常量100
+>         >     ```
+>         >
+>         > 2. 定义宏
+>         >
+>         >     ```c
+>         >     #define ADD(x,y) ((x)+(y))
+>         >     //ADD--------->宏名
+>         >     //(x,y)------->宏的参数(参数为无类型)
+>         >     //((x)+(y))--->宏体
+>         >                                             
+>         >     int main()
+>         >     {
+>         >     	int a = 10;
+>         >     	int b = 20;
+>         >     	int c = ADD(a, b);//进行宏替换后的结果为((a)+(b))
+>         >                                               
+>         >     	printf("%d\n", c);
+>         >     	                                        
+>         >     	return 0;
+>         >     }
+>         >     ```
+>         >
+>         >     ```c
+>         >     ADD--------->宏名
+>         >     (x,y)------->宏的参数(参数为无类型)
+>         >     ((x)+(y))--->宏体
+>         >     ```
+
+## 指针
+
+- 指针变量用于存放地址
+
+### 例如在<i>32位的电脑</i>中
+
+> - 在计算机中，内存会划分为一个个的内存单元（一个内存单元的大小为：1byte）
+>
+> - 每个内存单元都有一个编号
+>
+> 在<i>32位的电脑</i>中，有32根地址线
+>
+> ```c
+> 00000000 00000000 00000000 00000000		-->0
+> 00000000 00000000 00000000 00000001		-->1
+> 00000000 00000000 00000000 00000010		-->2
+> 00000000 00000000 00000000 00000011		-->3
+> ... ...
+> 11111111 11111111 11111111 11111111		-->4,294,967,295
+> ```
+>
+> $2^{32}=4,294,967,295（Byte）$  个地址序列
+> $$
+> \begin{aligned}
+> 	2^{32}
+> 	&=4,294,967,295(Byte)\\
+> 	&=4,194,304(Kb)\\
+> 	&=4096(Mb)\\
+> 	&=4(Gb)
+> \end{aligned}
+> $$
+
+### 指针
+
+> ```c
+> int main()
+> {
+> 	int a = 11;//向内存申请4个字节，存储11
+> 
+> 	printf("%p\n", &a);//%p取地址操作符
+> 	return 0;
+> }
+> ```
+>
+> - 相较于<i>64位</i>的系统，在VS中监视变量a的存储过程
+>
+>     ![0000000b](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/0000000b.png)
+>
+> - a存放的地址：
+>
+>     ![监视a](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E7%9B%91%E8%A7%86%E5%8F%98%E9%87%8Fa.png)
+>
+> - 在内存中a的数据为
+>
+>    ```c
+>    0x00000005B9CFFBA4  0b 00 00 00  ....
+>                        ^^ ^^ ^^ ^^
+>                        || || || ||
+>                        A4 A5 A6 A7
+>    ```
+>
+> - 若要存储a的地址：
+>
+>     ```c
+>     int* p = &a;
+>     printf("%p\n", &a);//%p用于打印变量地址
+>     ```
+>     
+>     *此时的p就是指针变量*
+>     
+>     ```c
+>     int* p = &a;
+>                     
+>     int--->说明p指向的对象是int类型的
+>     *  --->说明p是指针变量
+>     ```
+>     
+>     - **内存单元**
+>     
+>         **编号**--->**地址**--->**地址也被称为指针**
+>     
+>         > 因此存放指针（地址）的变量就是指针变量
+>
+> ```c
+> int main()
+> {
+> 	int a = 11;
+> 	int* p = &a;
+> 	*p = 20;//解引用操作符，意思就是通过p中存放的地址，找到p所指向的对象，*p就是p指向的对象
+> 	printf("%d\n", a);//20
+> 	return 0;
+> }
+> ```
+>
+> - :star:**p = 20;*
+>     - **p*为<i><b>解引用操作符</b></i>，意思就是通过p中存放的地址，找到p所指向的对象，*p就是p指向的对象（此处的p指向的对象是a）
+>
+> 
+
+### 指针变量的大小
+
+> ```c
+> //x64的环境下
+> int main()
+> {
+> 	printf("%zd\n", sizeof(char*));		//8
+> 	printf("%zd\n", sizeof(short*));		//8
+> 	printf("%zd\n", sizeof(int*));		  //8
+> 	printf("%zd\n", sizeof(double*));	//8
+> 
+> 	return 0;
+> }
+> ```
+>
+> - 指针变量是用来存放地址的
+> - 不管是什么类型的指针，都是在创建指针变量
+> - 指针变量的大小取决于<b><i>系统存放一个地址</i></b>需要多大的空间
+> - *32位（x86）*的系统上的地址：32bit - 4byte，所以此处指针变量的大小是4个字节
+> - *64位（x64）*的系统上的地址：64bit - 8byte，所以此处指针变量的大小是8个字节
+
+
+
+## C指针（嵌入式）
+
+### :small_red_triangle:指针（Pointer）
+
+> 指针与底层硬件（内存）联系紧密，使用指针可以操作数据的地址，实现数据的间接访问
+
+### :small_red_triangle:计算机储存机制
+
+- ![计算机存储机制](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6.png)
+    - 注：与小端存储相对应的还有大端存储，即大端在首地址
+
+### :small_red_triangle:定义指针
+
+- 指针即指针变量，用于存放其它数据单元（变量、数组、结构体、函数等）的*首地址*
+
+    > - 若指针存放了某个数据单元的首地址，则这个指针指向了这个数据单元
+    >
+    > - 若指针存放的值是0，则该指针为空指针
+
+- 定义一个指针变量
+
+    > |      数据类型      | 所占字节 | 指向该数据类型的指针 | 所占字节 |
+    > | :----------------: | :------: | :------------------: | :------: |
+    > | `(unsigned) char`  |  1字节   | `(unsigned) char *`  | `x`字节  |
+    > | `(unsigned) short` |  2字节   | `(unsigned) short *` | `x`字节  |
+    > |  `(unsigned) int`  |  4字节   |  `(unsigned) int *`  | `x`字节  |
+    > | `(unsigned) long`  |  4字节   | `(unsigned) long *`  | `x`字节  |
+    > |      `float`       |  4字节   |      `float *`       | `x`字节  |
+    > |      `double`      |  8字节   |      `double *`      | `x`字节  |
+    >
+    > - *16位系统*    `x`= 2
+    > - *32位系统*    `x`= 4
+    > - *64位系统*    `x`= 8
+    >
+    >   **指针占用的位宽 = 系统的位宽**
+
+### :small_red_triangle:指针的操作
+
+|           |                                  |
+| :-------: | :------------------------------: |
+| int `a`;  |      定义一个int类型的数据       |
+| int `*p`; | 定义一个指向int类型数据的指针`p` |
+
+- 对指针p有如下操作方式
+
+    | 操作方式 |    举例    |            解释             |
+    | :------: | :--------: | :-------------------------: |
+    |  取地址  | `p = &a;`  |   将数据a的*首地址*赋给p    |
+    |  取内容  |   `*p;`    |   取出指针指向的数据单元    |
+    |   加++   |   `p++;`   | 使指针向下移动*1个数据宽度* |
+    |    加    | `p = p+5;` | 使指针向下移动*5个数据宽度* |
+    |   减--   |   `p--;`   | 使指针向上移动*1个数据宽度* |
+    |    减    | `p = p-5;` | 使指针向上移动*5个数据宽度* |
+
+    *数据宽度：*int = 4  ； char = 1 ... ...
+
+    > - <big><big><kbd>变量1</kbd></big></big>`&`<big><big><kbd>变量2</kbd></big></big>    --->   *按位与* 
+    > - ​              `&`<big><big><kbd>变量1</kbd></big></big>    --->   *取地址*
+    > 
+
+    > - <big><big><kbd>变量1</kbd></big></big>`*`<big><big><kbd>变量2</kbd></big></big>    --->   *相乘* 
+    > - ​              `*`<big><big><kbd>变量1</kbd></big></big>    --->   *取内容（解引用）*
+    > - <big><big><kbd>int等数据类型</kbd></big></big>`*`    --->   *标识* 
+
+### :small_red_triangle:数组与指针
+
+- <font color='deepskyblue'><i>数组</i></font>是一些相同数据类型的变量组成的集合
+
+- <font color='deepskyblue'><i>数组名</i></font>为指向该数据类型的指针
+
+    > 数组的定义等效于*申请内存*--->*定义指针*--->*初始化*
+    >
+    > > ```c
+    > > char a[] = {0x33,0x34,0x35};
+    > > ```
+    > >
+    > > 1. 申请内存
+    > >
+    > > 2. 定义*char \*a = 0x4000*
+    > >
+    > >     > *0x4000*是数组*a[ ]*中元素的首地址
+    > >
+    > > 3. 初始化数组数据
+
+- 利用下标引用数组数据<big><big>&#8660;</big></big>指针取内容
+
+    | 数组数据 | <big><big>&#8660;</big></big> | 指针取内容 |
+    | :------: | :---------------------------: | :--------: |
+    |  `a[0]`  | <big><big>&#8660;</big></big> |    `*a`    |
+    |  `a[1]`  | <big><big>&#8660;</big></big> |  `*(a+1)`  |
+    |  `a[2]`  | <big><big>&#8660;</big></big> |  `*(a+2)`  |
+
+- ![变量指针二级指针](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E5%8F%98%E9%87%8F%E4%B8%8E%E6%8C%87%E9%92%88.png)
+
+    > 同级指针之间才能相互赋值，跨级赋值将会导致编译器报错或警告
+
+### :small_red_triangle:指针的应用
+
+- <font color='red'>传递参数</font>
+
+    > 1. 使用指针传递大容量的参数，主函数和子函数使用的是*同一套数据*，避免了参数传递过程中的数据复制，提高了运行效率，减少了内存占用。
+    > 2. 使用指针传递输出函数，利用主函数和子函数使用同一套数据的特性，实现数据的返回，可实现*多返回值函数*的设计。
+
+#### 不使用指针传递（使用*值传递*）
+
+```c
+#include <stdio.h>
+
+void Fun(int Temp)
+{
+	printf("%x\n", Temp);
+}
+
+void main()
+{
+	int a = 0x66;
+	Fun(a);
+	return 0;
+}
+```
+
+![值传递](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E5%80%BC%E4%BC%A0%E9%80%92.png)
+
+> - 优点 ：主函数与子函数之间的数据隔离开，保证了数据的安全
+> - 缺点：数据重复，占用了更多的空间，降低了程序的运行效率
+
+#### 指针传递数组
+
+```c
+#include <stdio.h>
+//找到数组中的最大值
+//***************形参********
+int FindMax(int* array, int length)
+{
+	int Max = array[0];
+	int i;
+	for (i = 1; i < length; i++)
+	{
+		if (array[i] > Max)
+		{
+			Max = array[i];
+		}
+	}
+	return Max;
+}
+
+void main()
+{
+	int a[] = { 5,6,9,7,8,1 };
+	int Max = 0;
+  //**********实参****
+	Max = FindMax(a, 6);
+	printf("Max=%d\n", Max);//9
+	return 0;
+}
+```
+
+![指针传递数组](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E6%8C%87%E9%92%88%E4%BC%A0%E9%80%92%E6%95%B0%E7%BB%84.png)
+
+#### 指针传递输出函数
+
+```c
+#include <stdio.h>
+//输出最大值及其出现的次数
+void FindMaxAndCount(int* max, int* count, const int* array, int length)
+//const----->只读
+{
+	int i;
+	*max = array[0];
+	*count = 1;
+	for (i = 1; i < length; i++)
+	{
+		if (array[i] > *max)
+		{
+			*max = array[i];
+			*count = 1;
+		}
+		else if (array[i] == *max)
+		{
+			*count = *count + 1;
+		}
+	}
+}
+
+void main()
+{
+	int a[] = { 8,8,6,8,1,3,8 };
+	int Max, Count;
+	FindMaxAndCount(&Max, &Count, a, 7);
+	printf("Max=%d\n", Max);
+	printf("Count=%d\n", Count);
+	return 0;
+}
+```
+
+![指针传递输出函数](https://cdn.jsdelivr.net/gh/Code2NZH/TuChuang-Owned@main/C_Note/%E6%8C%87%E9%92%88%E4%BC%A0%E9%80%92%E8%BE%93%E5%87%BA%E5%87%BD%E6%95%B0.png)
+
+- > - 数组复制：<font color="red">strcpy( _ , _ )</font>
+    >
+    >     ```c
+    >     char str1[20];
+    >     char str2[] = "Hello";
+    >     strcpy(str1,str2);//将数组str2的值赋给数组str1
+    >     ```
+
+#### 指针传递返回值
+
+> 将模块内的共有部分返回，让主函数持有模块的“句柄”，便于程序对指定对象的操作
+
+```c
+#include <stdio.h>
+int A[] = { 21,76,49 };
+int* GetA( )//返回值为int型指针
+{
+	return A;
+}
+
+void main()
+{
+	int* a;
+	a = GetA();
+	printf("A[0]=%d\n", a[0]);
+	printf("A[1]=%d\n", a[1]);
+	printf("A[2]=%d\n", *(a + 2));//有两种写法
+}
+```
+
+输出结果：
+
+```c
+A[0]=21
+A[1]=76
+A[2]=49
+```
+
